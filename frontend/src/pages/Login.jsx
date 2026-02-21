@@ -22,12 +22,10 @@ const Login = () => {
             await login(email, password);
             navigate('/');
         } catch (err) {
-            // If account is not verified, redirect to OTP page
-            if (err.response?.data?.needsVerification) {
-                navigate(`/verify-otp?email=${encodeURIComponent(email)}`);
-                return;
-            }
-            setError(err.response?.data?.message || err.message);
+            const data = err.response?.data;
+
+
+            setError(data?.message || err.message);
         } finally {
             setIsLoading(false);
         }
@@ -78,9 +76,6 @@ const Login = () => {
                     <div>
                         <div className="flex items-center justify-between mb-2">
                             <label className="block text-sm font-medium text-slate-300">Password</label>
-                            <Link to="/forgot-password" className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors">
-                                Forgot password?
-                            </Link>
                         </div>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

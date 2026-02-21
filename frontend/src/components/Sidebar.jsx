@@ -1,23 +1,18 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useQuery } from '@tanstack/react-query';
+import api from '../services/api';
 import {
-    LayoutDashboard,
-    Truck,
-    Map,
-    Wrench,
-    Droplet,
-    Users,
-    BarChart3,
-    LogOut,
-    Navigation as NavigationIcon,
-    X,
-    ShieldAlert,
-    MessageSquare
+    LayoutDashboard, Truck, Map, Wrench, Droplet, Users,
+    BarChart3, LogOut, Navigation as NavigationIcon, X,
+    ShieldAlert, MessageSquare, UserCheck
 } from 'lucide-react';
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
     const { user, logout } = useAuth();
+
+
 
     const navItems = [
         { name: 'Dashboard', path: '/', icon: LayoutDashboard, roles: ['Fleet Manager', 'Dispatcher', 'Safety Officer', 'Financial Analyst'] },
@@ -29,7 +24,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         { name: 'Incidents', path: '/incidents', icon: ShieldAlert, roles: ['Fleet Manager', 'Safety Officer'] },
         { name: 'Analytics', path: '/analytics', icon: BarChart3, roles: ['Fleet Manager', 'Financial Analyst'] },
         { name: 'My Jobs', path: '/driver-portal', icon: NavigationIcon, roles: ['Driver'] },
-        { name: 'Chat', path: '/chat', icon: MessageSquare, roles: ['Fleet Manager', 'Dispatcher', 'Safety Officer', 'Financial Analyst', 'Driver'] },
+        { name: 'Chat', path: '/chat', icon: MessageSquare, roles: ['Fleet Manager', 'Dispatcher', 'Safety Officer', 'Financial Analyst', 'Driver'] }
     ];
 
     const filteredNav = navItems.filter(item => item.roles.includes(user?.role));
@@ -73,7 +68,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                 }
                             >
                                 <Icon className="w-5 h-5 flex-shrink-0" />
-                                {item.name}
+                                <span className="flex-1">{item.name}</span>
+                                {item.badge > 0 && (
+                                    <span className="bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">{item.badge}</span>
+                                )}
                             </NavLink>
                         );
                     })}

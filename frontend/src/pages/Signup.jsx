@@ -25,8 +25,8 @@ const Signup = () => {
         setIsLoading(true);
         try {
             await register(name, email, password, role, { licenseExpiryDate, allowedVehicleType });
-            // Redirect to OTP verification page after successful registration
-            navigate(`/verify-otp?email=${encodeURIComponent(email)}`);
+            // Redirect to dashboard after successful registration and auto-login
+            navigate('/');
         } catch (err) {
             setError(err.response?.data?.message || err.message);
         } finally {

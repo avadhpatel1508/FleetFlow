@@ -16,9 +16,7 @@ import Drivers from './pages/Drivers';
 import Analytics from './pages/Analytics';
 import DriverPortal from './pages/DriverPortal';
 import Incidents from './pages/Incidents';
-import VerifyOTP from './pages/VerifyOTP';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
+
 import Chat from './pages/Chat';
 
 // Protected Route Wrapper
@@ -40,9 +38,8 @@ function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-      <Route path="/verify-otp" element={<VerifyOTP />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
+
+
 
       {/* Protected Routes inside Layout */}
       <Route path="/" element={
@@ -105,6 +102,7 @@ function App() {
           <Chat />
         </ProtectedRoute>
       } />
+
 
       {/* Catch All */}
       <Route path="*" element={<Navigate to="/" replace />} />
