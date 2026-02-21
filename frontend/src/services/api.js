@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:5000/api', // Point to backend API
+    baseURL: import.meta.env.VITE_API_URL || 'https://fleetflow-uldj.onrender.com/api', // Point to backend API
 });
 
 // Request interceptor for API calls

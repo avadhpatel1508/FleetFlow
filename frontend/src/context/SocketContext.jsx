@@ -12,7 +12,8 @@ export const SocketProvider = ({ children }) => {
 
     useEffect(() => {
         if (user) {
-            const newSocket = io('http://localhost:5000');
+            const socketUrl = import.meta.env.VITE_SOCKET_URL || 'https://fleetflow-uldj.onrender.com';
+            const newSocket = io(socketUrl);
             setSocket(newSocket);
 
             return () => newSocket.close();
