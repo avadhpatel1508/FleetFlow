@@ -2,6 +2,8 @@ import Vehicle from '../models/Vehicle.js';
 import Trip from '../models/Trip.js';
 import Maintenance from '../models/Maintenance.js';
 import Fuel from '../models/Fuel.js';
+import Driver from '../models/Driver.js';
+import Incident from '../models/Incident.js';
 
 // @desc    Get dashboard KPIs
 // @route   GET /api/analytics/kpi
@@ -20,12 +22,21 @@ export const getDashboardKPIs = async (req, res) => {
 
         const pendingCargo = trips.reduce((acc, trip) => acc + trip.cargoWeight, 0);
 
+        // Total revenue from completed trips
+        const completedTrips = await Trip.find({ status: 'Completed', isActive: true });
+        const totalRevenue = completedTrips.reduce((acc, t) => acc + (t.revenue || 0), 0);
+
+        // Active (available / on-trip) drivers
+        const activeDrivers = await Driver.countDocuments({ isActive: true });
+
         res.json({
             activeFleet,
             maintenanceAlerts,
             utilizationRate,
             pendingCargo,
-            totalVehicles
+            totalVehicles,
+            totalRevenue,
+            activeDrivers
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -79,6 +90,54 @@ export const getMetrics = async (req, res) => {
         }));
 
         res.json(metrics);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Get recent activity feed for dashboard
+// @route   GET /api/analytics/activity
+// @access  Private
+export const getActivityFeed = async (req, res) => {
+    try {
+        const [recentTrips, recentIncidents, recentMaintenance] = await Promise.all([
+            Trip.find({ isActive: true }).sort('-createdAt').limit(5)
+                .populate('vehicleId', 'model licensePlate')
+                .populate('driverId', 'name'),
+            Incident.find().sort('-createdAt').limit(5)
+                .populate('driverId', 'name'),
+            Maintenance.find().sort('-createdAt').limit(5)
+                .populate('vehicleId', 'model licensePlate')
+        ]);
+
+        const events = [
+            ...recentTrips.map(t => ({
+                type: 'trip',
+                icon: 'truck',
+                title: `Trip ${t.status}`,
+                detail: `${t.vehicleId?.model || 'Vehicle'} • Driver: ${t.driverId?.name || 'Unassigned'}`,
+                color: t.status === 'Completed' ? 'emerald' : t.status === 'Dispatched' ? 'indigo' : 'slate',
+                time: t.updatedAt || t.createdAt
+            })),
+            ...recentIncidents.map(i => ({
+                type: 'incident',
+                icon: 'shield',
+                title: `${i.severity} Incident: ${i.type}`,
+                detail: `Driver: ${i.driverId?.name || 'Unknown'} • Penalty: -${i.penaltyApplied}pts`,
+                color: i.severity === 'Critical' ? 'rose' : i.severity === 'Medium' ? 'amber' : 'sky',
+                time: i.createdAt
+            })),
+            ...recentMaintenance.map(m => ({
+                type: 'maintenance',
+                icon: 'wrench',
+                title: `Maintenance: ${m.type}`,
+                detail: `${m.vehicleId?.model || 'Vehicle'} • $${m.cost}`,
+                color: m.status === 'Completed' ? 'emerald' : 'amber',
+                time: m.createdAt
+            }))
+        ].sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 10);
+
+        res.json(events);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
