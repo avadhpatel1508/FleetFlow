@@ -16,7 +16,7 @@ router.route('/')
 
 router.route('/:id')
     .get(protect, getDriverById)
-    .put(protect, authorize('Fleet Manager', 'Dispatcher'), updateDriver)
+    .put(protect, authorize('Fleet Manager', 'Dispatcher', 'Safety Officer'), updateDriver)
     .delete(protect, authorize('Fleet Manager'), deleteDriver);
 
 export default router;

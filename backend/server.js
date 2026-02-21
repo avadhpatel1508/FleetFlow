@@ -12,6 +12,8 @@ import tripRoutes from './routes/tripRoutes.js';
 import maintenanceRoutes from './routes/maintenanceRoutes.js';
 import fuelRoutes from './routes/fuelRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
+import incidentRoutes from './routes/incidentRoutes.js';
+import messageRoutes from './routes/messageRoutes.js';
 
 // Load env vars
 dotenv.config();
@@ -32,11 +34,24 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 
+// Track online users: userId -> socketId
+const userSockets = {};
+app.set('userSockets', userSockets);
+
 // Socket.io connection
 io.on('connection', (socket) => {
     console.log(`Socket Connected: ${socket.id}`);
 
+    // Client sends their userId after connecting
+    socket.on('join', (userId) => {
+        userSockets[userId] = socket.id;
+        console.log(`User ${userId} mapped to socket ${socket.id}`);
+    });
+
     socket.on('disconnect', () => {
+        // Remove disconnected user from map
+        const entry = Object.entries(userSockets).find(([, sid]) => sid === socket.id);
+        if (entry) delete userSockets[entry[0]];
         console.log(`Socket Disconnected: ${socket.id}`);
     });
 });
@@ -52,6 +67,8 @@ app.use('/api/trips', tripRoutes);
 app.use('/api/maintenance', maintenanceRoutes);
 app.use('/api/fuel', fuelRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/incidents', incidentRoutes);
+app.use('/api/messages', messageRoutes);
 
 // Basic Route for testing
 app.get('/', (req, res) => {

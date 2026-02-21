@@ -25,7 +25,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['Fleet Manager', 'Dispatcher', 'Safety Officer', 'Financial Analyst', 'Driver'],
         default: 'Dispatcher'
-    }
+    },
+    isVerified: {
+        type: Boolean
+        // No default — existing users without this field are treated as verified
+        // Only newly registered users are explicitly set to false
+    },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date
 }, {
     timestamps: true
 });

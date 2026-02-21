@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import Layout from './components/Layout';
+import SplashScreen from './components/SplashScreen';
 
 // Pages
 import Login from './pages/Login';
@@ -14,6 +15,11 @@ import Fuel from './pages/Fuel';
 import Drivers from './pages/Drivers';
 import Analytics from './pages/Analytics';
 import DriverPortal from './pages/DriverPortal';
+import Incidents from './pages/Incidents';
+import VerifyOTP from './pages/VerifyOTP';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import Chat from './pages/Chat';
 
 // Protected Route Wrapper
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -27,10 +33,16 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 };
 
 function App() {
+  const [showSplash, setShowSplash] = useState(true);
+
+  if (showSplash) return <SplashScreen onDone={() => setShowSplash(false)} />;
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/verify-otp" element={<VerifyOTP />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
 
       {/* Protected Routes inside Layout */}
       <Route path="/" element={
@@ -79,6 +91,18 @@ function App() {
       <Route path="/analytics" element={
         <ProtectedRoute allowedRoles={['Fleet Manager', 'Financial Analyst']}>
           <Analytics />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/incidents" element={
+        <ProtectedRoute allowedRoles={['Fleet Manager', 'Safety Officer']}>
+          <Incidents />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/chat" element={
+        <ProtectedRoute>
+          <Chat />
         </ProtectedRoute>
       } />
 

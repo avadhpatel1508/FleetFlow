@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { Truck, Lock, Mail, AlertCircle } from 'lucide-react';
+import api from '../services/api';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -17,12 +18,16 @@ const Login = () => {
         e.preventDefault();
         setError('');
         setIsLoading(true);
-
         try {
             await login(email, password);
             navigate('/');
         } catch (err) {
-            setError(err.message);
+            // If account is not verified, redirect to OTP page
+            if (err.response?.data?.needsVerification) {
+                navigate(`/verify-otp?email=${encodeURIComponent(email)}`);
+                return;
+            }
+            setError(err.response?.data?.message || err.message);
         } finally {
             setIsLoading(false);
         }
@@ -36,14 +41,9 @@ const Login = () => {
                 transition={{ duration: 0.5 }}
                 className="w-full max-w-md bg-[var(--bg-panel)] rounded-2xl shadow-2xl p-8 border border-slate-700"
             >
-                <div className="text-center mb-10">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-indigo-500/10 mb-4">
-                        <Truck className="w-8 h-8 text-indigo-500" />
-                    </div>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-                        FleetFlow
-                    </h1>
-                    <p className="text-sm text-[var(--text-muted)] mt-2">Sign in to your command center</p>
+                <div className="flex flex-col items-center mb-8">
+                    <img src="/logo.svg" alt="FleetFlow" className="h-12 w-auto mb-3" />
+                    <p className="text-sm text-[var(--text-muted)] mt-1">Sign in to your command center</p>
                 </div>
 
                 {error && (
@@ -78,9 +78,9 @@ const Login = () => {
                     <div>
                         <div className="flex items-center justify-between mb-2">
                             <label className="block text-sm font-medium text-slate-300">Password</label>
-                            <a href="#" className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors">
+                            <Link to="/forgot-password" className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors">
                                 Forgot password?
-                            </a>
+                            </Link>
                         </div>
                         <div className="relative">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

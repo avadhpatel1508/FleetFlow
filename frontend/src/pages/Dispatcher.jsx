@@ -3,6 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, X, Search, CheckCircle } from 'lucide-react';
+import usePageTitle from '../hooks/usePageTitle';
+import TruckLoader from '../components/TruckLoader';
 
 const StatusPill = ({ status }) => {
     const colors = {
@@ -20,6 +22,7 @@ const StatusPill = ({ status }) => {
 
 const Dispatcher = () => {
     const queryClient = useQueryClient();
+    usePageTitle('Dispatch');
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [isCompleteOpen, setIsCompleteOpen] = useState(null); // stores trip id to complete
     const [search, setSearch] = useState('');
@@ -155,7 +158,7 @@ const Dispatcher = () => {
                         </thead>
                         <tbody>
                             {tripsLoading ? (
-                                <tr><td colSpan="6" className="p-6 text-center">Loading trips...</td></tr>
+                                <tr><td colSpan="6"><TruckLoader message="Loading trips..." /></td></tr>
                             ) : filteredTrips.map(t => (
                                 <tr key={t._id} className="border-b border-slate-800 hover:bg-slate-800/20 transition-colors">
                                     <td className="px-6 py-4">

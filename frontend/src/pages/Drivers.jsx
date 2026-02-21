@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, X, Search, AlertCircle, History, Map, CheckCircle, Download, FileText } from 'lucide-react';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import usePageTitle from '../hooks/usePageTitle';
+import TruckLoader from '../components/TruckLoader';
 
 const StatusPill = ({ status }) => {
     const colors = {
@@ -21,6 +23,7 @@ const StatusPill = ({ status }) => {
 
 const Drivers = () => {
     const queryClient = useQueryClient();
+    usePageTitle('Driver Registry');
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [historyDriver, setHistoryDriver] = useState(null);
     const [search, setSearch] = useState('');
@@ -213,7 +216,7 @@ const Drivers = () => {
                         </thead>
                         <tbody>
                             {isLoading ? (
-                                <tr><td colSpan="7" className="p-6 text-center">Loading drivers...</td></tr>
+                                <tr><td colSpan="7"><TruckLoader message="Loading drivers..." /></td></tr>
                             ) : filteredDrivers.map(d => {
                                 const isExpired = new Date(d.licenseExpiryDate) < new Date();
                                 return (
@@ -344,7 +347,7 @@ const Drivers = () => {
 
                             <div className="overflow-y-auto flex-1 pr-2 space-y-3 custom-scrollbar">
                                 {isHistoryLoading ? (
-                                    <div className="flex justify-center p-12"><div className="w-8 h-8 border-2 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" /></div>
+                                    <TruckLoader message="Loading trip history..." />
                                 ) : driverTrips.length === 0 ? (
                                     <div className="bg-slate-800/20 border border-slate-700/50 rounded-xl p-8 text-center text-slate-400 flex flex-col items-center">
                                         <Map className="w-10 h-10 mb-3 opacity-20" />

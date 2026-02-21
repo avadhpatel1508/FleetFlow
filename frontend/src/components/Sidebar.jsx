@@ -11,7 +11,9 @@ import {
     BarChart3,
     LogOut,
     Navigation as NavigationIcon,
-    X
+    X,
+    ShieldAlert,
+    MessageSquare
 } from 'lucide-react';
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
@@ -24,8 +26,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         { name: 'Maintenance', path: '/maintenance', icon: Wrench, roles: ['Fleet Manager'] },
         { name: 'Fuel & Expenses', path: '/fuel', icon: Droplet, roles: ['Fleet Manager', 'Financial Analyst'] },
         { name: 'Drivers', path: '/drivers', icon: Users, roles: ['Fleet Manager', 'Safety Officer'] },
+        { name: 'Incidents', path: '/incidents', icon: ShieldAlert, roles: ['Fleet Manager', 'Safety Officer'] },
         { name: 'Analytics', path: '/analytics', icon: BarChart3, roles: ['Fleet Manager', 'Financial Analyst'] },
         { name: 'My Jobs', path: '/driver-portal', icon: NavigationIcon, roles: ['Driver'] },
+        { name: 'Chat', path: '/chat', icon: MessageSquare, roles: ['Fleet Manager', 'Dispatcher', 'Safety Officer', 'Financial Analyst', 'Driver'] },
     ];
 
     const filteredNav = navItems.filter(item => item.roles.includes(user?.role));
@@ -41,15 +45,10 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
             )}
 
             <aside className={`fixed md:sticky top-0 left-0 z-50 w-64 bg-[#1e293b] border-r border-slate-800 h-[100dvh] flex flex-col pt-6 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
-                <div className="px-6 mb-8 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center">
-                            <Truck className="w-6 h-6 text-indigo-400" />
-                        </div>
-                        <div>
-                            <h2 className="text-xl font-bold tracking-tight text-white">FleetFlow</h2>
-                            <p className="text-xs text-slate-400 pr-2 truncate max-w-[120px]">{user?.role}</p>
-                        </div>
+                <div className="px-4 mb-8 flex items-center justify-between">
+                    <img src="/logo.svg" alt="FleetFlow" className="h-9 w-auto" />
+                    <div className="flex flex-col items-end">
+                        <span className="text-xs text-slate-400 truncate max-w-[100px]">{user?.role}</span>
                     </div>
                     <button
                         className="md:hidden text-slate-400 hover:text-white"

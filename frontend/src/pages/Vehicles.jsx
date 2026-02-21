@@ -3,6 +3,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, X, Search } from 'lucide-react';
+import usePageTitle from '../hooks/usePageTitle';
+import TruckLoader from '../components/TruckLoader';
 
 const StatusPill = ({ status }) => {
     const colors = {
@@ -20,6 +22,7 @@ const StatusPill = ({ status }) => {
 
 const Vehicles = () => {
     const queryClient = useQueryClient();
+    usePageTitle('Vehicles');
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [search, setSearch] = useState('');
 
@@ -95,51 +98,53 @@ const Vehicles = () => {
                     </div>
                 </div>
 
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm text-slate-400">
-                        <thead className="text-xs uppercase bg-slate-800/50 text-slate-300">
-                            <tr>
-                                <th className="px-6 py-4">Model</th>
-                                <th className="px-6 py-4">License Plate</th>
-                                <th className="px-6 py-4">Type</th>
-                                <th className="px-6 py-4">Region</th>
-                                <th className="px-6 py-4">Capacity</th>
-                                <th className="px-6 py-4">Odometer</th>
-                                <th className="px-6 py-4">Status</th>
-                                <th className="px-6 py-4 text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {isLoading ? (
-                                <tr><td colSpan="8" className="p-6 text-center">Loading vehicles...</td></tr>
-                            ) : filteredVehicles.map(v => (
-                                <tr key={v._id} className="border-b border-slate-800 hover:bg-slate-800/20 transition-colors">
-                                    <td className="px-6 py-4 font-medium text-white">{v.model}</td>
-                                    <td className="px-6 py-4"><span className="font-mono bg-slate-800 px-2 py-1 rounded">{v.licensePlate}</span></td>
-                                    <td className="px-6 py-4">{v.type}</td>
-                                    <td className="px-6 py-4">{v.region}</td>
-                                    <td className="px-6 py-4">{v.maxCapacity} kg</td>
-                                    <td className="px-6 py-4">{v.odometer.toLocaleString()} km</td>
-                                    <td className="px-6 py-4"><StatusPill status={v.status} /></td>
-                                    <td className="px-6 py-4 text-right">
-                                        <button
-                                            onClick={() => toggleStatusMutation.mutate({
-                                                id: v._id,
-                                                status: v.status === 'Available' ? 'Retired' : 'Available'
-                                            })}
-                                            className="text-indigo-400 hover:text-indigo-300 font-medium"
-                                        >
-                                            {v.status === 'Available' ? 'Retire' : 'Activate'}
-                                        </button>
-                                    </td>
+                {isLoading ? (
+                    <TruckLoader message="Loading vehicles..." />
+                ) : (
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left text-sm text-slate-400">
+                            <thead className="text-xs uppercase bg-slate-800/50 text-slate-300">
+                                <tr>
+                                    <th className="px-6 py-4">Model</th>
+                                    <th className="px-6 py-4">License Plate</th>
+                                    <th className="px-6 py-4">Type</th>
+                                    <th className="px-6 py-4">Region</th>
+                                    <th className="px-6 py-4">Capacity</th>
+                                    <th className="px-6 py-4">Odometer</th>
+                                    <th className="px-6 py-4">Status</th>
+                                    <th className="px-6 py-4 text-right">Actions</th>
                                 </tr>
-                            ))}
-                            {!isLoading && filteredVehicles.length === 0 && (
-                                <tr><td colSpan="8" className="p-6 text-center">No vehicles found.</td></tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                {filteredVehicles.map(v => (
+                                    <tr key={v._id} className="border-b border-slate-800 hover:bg-slate-800/20 transition-colors">
+                                        <td className="px-6 py-4 font-medium text-white">{v.model}</td>
+                                        <td className="px-6 py-4"><span className="font-mono bg-slate-800 px-2 py-1 rounded">{v.licensePlate}</span></td>
+                                        <td className="px-6 py-4">{v.type}</td>
+                                        <td className="px-6 py-4">{v.region}</td>
+                                        <td className="px-6 py-4">{v.maxCapacity} kg</td>
+                                        <td className="px-6 py-4">{v.odometer.toLocaleString()} km</td>
+                                        <td className="px-6 py-4"><StatusPill status={v.status} /></td>
+                                        <td className="px-6 py-4 text-right">
+                                            <button
+                                                onClick={() => toggleStatusMutation.mutate({
+                                                    id: v._id,
+                                                    status: v.status === 'Available' ? 'Retired' : 'Available'
+                                                })}
+                                                className="text-indigo-400 hover:text-indigo-300 font-medium"
+                                            >
+                                                {v.status === 'Available' ? 'Retire' : 'Activate'}
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                                {filteredVehicles.length === 0 && (
+                                    <tr><td colSpan="8" className="p-6 text-center">No vehicles found.</td></tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
             </div>
 
             {/* Add Modal */}

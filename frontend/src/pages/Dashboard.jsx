@@ -6,6 +6,8 @@ import api from '../services/api';
 import { useSocket } from '../context/SocketContext';
 import { useAuth } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
+import usePageTitle from '../hooks/usePageTitle';
+import TruckLoader from '../components/TruckLoader';
 
 const DashboardCard = ({ title, value, icon: Icon, color, delay }) => (
     <motion.div
@@ -33,6 +35,8 @@ const Dashboard = () => {
         return <Navigate to="/driver-portal" replace />;
     }
 
+    usePageTitle('Command Center');
+
     const { data: kpis, isLoading, error, refetch } = useQuery({
         queryKey: ['kpis'],
         queryFn: async () => {
@@ -58,8 +62,8 @@ const Dashboard = () => {
         };
     }, [socket, refetch]);
 
-    if (isLoading) return <div className="text-slate-400">Loading Command Center...</div>;
-    if (error) return <div className="text-red-400">Error loading KPIs</div>;
+    if (isLoading) return <TruckLoader message="Loading Command Center..." />;
+    if (error) return <div className="text-red-400 p-8 text-center">Error loading KPIs</div>;
 
     return (
         <div className="space-y-6">

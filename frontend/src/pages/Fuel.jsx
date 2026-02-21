@@ -3,9 +3,12 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, X } from 'lucide-react';
+import usePageTitle from '../hooks/usePageTitle';
+import TruckLoader from '../components/TruckLoader';
 
 const Fuel = () => {
     const queryClient = useQueryClient();
+    usePageTitle('Fuel & Expenses');
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
 
@@ -79,7 +82,7 @@ const Fuel = () => {
                         </thead>
                         <tbody>
                             {isLoading ? (
-                                <tr><td colSpan="4" className="p-6 text-center">Loading logs...</td></tr>
+                                <tr><td colSpan="4"><TruckLoader message="Loading fuel logs..." /></td></tr>
                             ) : logs.map(l => (
                                 <tr key={l._id} className="border-b border-slate-800 hover:bg-slate-800/20 transition-colors">
                                     <td className="px-6 py-4">

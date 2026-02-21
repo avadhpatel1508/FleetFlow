@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import api from '../services/api';
+import usePageTitle from '../hooks/usePageTitle';
 import { motion } from 'framer-motion';
 import { Download, FileText } from 'lucide-react';
 import {
@@ -9,8 +10,10 @@ import {
 } from 'recharts';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import TruckLoader from '../components/TruckLoader';
 
 const Analytics = () => {
+    usePageTitle('Analytics');
     const { data: metrics = [], isLoading } = useQuery({
         queryKey: ['analytics-metrics'],
         queryFn: async () => {
@@ -121,7 +124,7 @@ const Analytics = () => {
             </div>
 
             {isLoading ? (
-                <div className="text-slate-400">Loading metrics...</div>
+                <TruckLoader message="Crunching fleet analytics..." />
             ) : metrics.length === 0 ? (
                 <div className="text-slate-400">No data available for reporting.</div>
             ) : (

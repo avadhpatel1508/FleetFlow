@@ -6,6 +6,8 @@ import { Truck, CheckCircle, Navigation, Map, Download, FileText } from 'lucide-
 import { useAuth } from '../context/AuthContext';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import usePageTitle from '../hooks/usePageTitle';
+import TruckLoader from '../components/TruckLoader';
 
 const StatusPill = ({ status }) => {
     const colors = {
@@ -24,6 +26,7 @@ const StatusPill = ({ status }) => {
 const DriverPortal = () => {
     const queryClient = useQueryClient();
     const { user } = useAuth();
+    usePageTitle('My Jobs');
     const [isCompleteOpen, setIsCompleteOpen] = useState(null);
     const [errorMsg, setErrorMsg] = useState('');
 
@@ -68,7 +71,7 @@ const DriverPortal = () => {
         });
     };
 
-    if (isLoading) return <div className="text-slate-400 flex justify-center p-8">Loading your trips...</div>;
+    if (isLoading) return <TruckLoader message="Loading your trips..." />;
 
     const exportCSV = () => {
         if (!pastTrips.length) return;

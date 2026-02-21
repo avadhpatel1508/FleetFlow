@@ -14,8 +14,11 @@ export const SocketProvider = ({ children }) => {
         if (user) {
             const socketUrl = import.meta.env.VITE_SOCKET_URL || 'https://fleetflow-uldj.onrender.com';
             const newSocket = io(socketUrl);
+            // Register this user's socket with the server for direct messaging
+            newSocket.on('connect', () => {
+                newSocket.emit('join', user._id);
+            });
             setSocket(newSocket);
-
             return () => newSocket.close();
         } else if (socket) {
             socket.close();
