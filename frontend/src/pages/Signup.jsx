@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
-import { Truck, Lock, Mail, AlertCircle, User, Briefcase } from 'lucide-react';
+import { Truck, Lock, Mail, AlertCircle, User, Briefcase, ArrowRight } from 'lucide-react';
 
 const Signup = () => {
     const [name, setName] = useState('');
@@ -35,75 +35,81 @@ const Signup = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[var(--bg-dark)] px-4 py-12">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[var(--bg-dark)] via-[var(--bg-secondary)] to-[var(--bg-dark)] px-4 py-12 relative overflow-hidden">
+            {/* Animated Background Elements */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute -top-1/2 -right-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute -bottom-1/2 -left-1/2 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+            </div>
+
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="w-full max-w-md bg-[var(--bg-panel)] rounded-2xl shadow-2xl p-8 border border-slate-700 mt-8 mb-8"
+                className="w-full max-w-md bg-gradient-to-br from-[var(--bg-panel)] to-[var(--bg-hover)] rounded-2xl shadow-2xl shadow-black/50 p-8 border border-white/10 backdrop-blur-md relative z-10 my-8"
             >
+                {/* Logo & Header */}
                 <div className="flex flex-col items-center mb-8">
-                    <img src="/logo.svg" alt="FleetFlow" className="h-12 w-auto mb-4" />
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg mb-4 group hover:scale-110 transition-transform">
+                        <Truck className="w-8 h-8 text-white group-hover:animate-float" />
+                    </div>
                     <h1 className="text-2xl font-bold text-white">Create Account</h1>
-                    <p className="text-sm text-[var(--text-muted)] mt-1">Join FleetFlow to manage your operations</p>
+                    <p className="text-sm text-slate-400 mt-1">Join FleetFlow to manage your operations</p>
                 </div>
 
                 {error && (
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center text-red-400 text-sm"
+                        className="mb-6 p-4 rounded-lg bg-red-500/15 border border-red-500/30 flex items-center gap-3 text-red-300 text-sm"
                     >
-                        <AlertCircle className="w-5 h-5 mr-3 shrink-0" />
-                        {error}
+                        <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                        <span>{error}</span>
                     </motion.div>
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-5">
+                    {/* Full Name */}
                     <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">Full Name</label>
+                        <label className="block text-sm font-semibold text-slate-200 mb-2">Full Name</label>
                         <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <User className="h-5 w-5 text-slate-500" />
-                            </div>
+                            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                             <input
                                 type="text"
                                 required
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
-                                className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none text-white placeholder-slate-500"
+                                className="w-full pl-12 pr-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none text-white placeholder-slate-500 hover:border-white/20"
                                 placeholder="John Doe"
                             />
                         </div>
                     </div>
 
+                    {/* Email */}
                     <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">Email Address</label>
+                        <label className="block text-sm font-semibold text-slate-200 mb-2">Email Address</label>
                         <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <Mail className="h-5 w-5 text-slate-500" />
-                            </div>
+                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                             <input
                                 type="email"
                                 required
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none text-white placeholder-slate-500"
+                                className="w-full pl-12 pr-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none text-white placeholder-slate-500 hover:border-white/20"
                                 placeholder="john@fleetflow.com"
                             />
                         </div>
                     </div>
 
+                    {/* Role */}
                     <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">Role</label>
+                        <label className="block text-sm font-semibold text-slate-200 mb-2">Role</label>
                         <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <Briefcase className="h-5 w-5 text-slate-500" />
-                            </div>
+                            <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 pointer-events-none" />
                             <select
                                 value={role}
                                 onChange={(e) => setRole(e.target.value)}
-                                className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none text-white appearance-none"
+                                className="w-full pl-12 pr-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none text-white appearance-none hover:border-white/20"
                             >
                                 <option value="Dispatcher">Dispatcher</option>
                                 <option value="Safety Officer">Safety Officer</option>
@@ -113,28 +119,29 @@ const Signup = () => {
                         </div>
                     </div>
 
+                    {/* Driver-specific fields */}
                     {role === 'Driver' && (
                         <motion.div
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
-                            className="space-y-5 border-t border-slate-700/50 pt-5 mt-2"
+                            className="space-y-5 border-t border-white/10 pt-5 -mx-8 px-8"
                         >
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-2">License Expiry Date</label>
+                                <label className="block text-sm font-semibold text-slate-200 mb-2">License Expiry Date</label>
                                 <input
                                     type="date"
                                     required={role === 'Driver'}
                                     value={licenseExpiryDate}
                                     onChange={(e) => setLicenseExpiryDate(e.target.value)}
-                                    className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none text-white"
+                                    className="w-full px-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none text-white hover:border-white/20"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-slate-300 mb-2">Vehicle Certifications</label>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <label className="block text-sm font-semibold text-slate-200 mb-3">Vehicle Certifications</label>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                     {['Car', 'Truck', 'Van'].map((type) => (
-                                        <label key={type} className="flex items-center space-x-3 cursor-pointer p-3 rounded-lg border border-slate-700/50 hover:bg-slate-800/30 transition-colors">
+                                        <label key={type} className="flex items-center gap-3 cursor-pointer p-3 rounded-lg border border-white/10 hover:bg-white/5 hover:border-white/20 transition-all">
                                             <input
                                                 type="checkbox"
                                                 value={type}
@@ -146,9 +153,9 @@ const Signup = () => {
                                                         setAllowedVehicleType(allowedVehicleType.filter(t => t !== type));
                                                     }
                                                 }}
-                                                className="w-4 h-4 text-indigo-500 rounded border-slate-600 focus:ring-indigo-500 bg-slate-800"
+                                                className="w-5 h-5 text-indigo-500 rounded border-white/20 focus:ring-indigo-500 bg-slate-800 accent-indigo-500"
                                             />
-                                            <span className="text-sm text-slate-300">{type}</span>
+                                            <span className="text-sm text-slate-300 font-medium">{type}</span>
                                         </label>
                                     ))}
                                 </div>
@@ -159,39 +166,43 @@ const Signup = () => {
                         </motion.div>
                     )}
 
+                    {/* Password */}
                     <div>
-                        <label className="block text-sm font-medium text-slate-300 mb-2">Password</label>
+                        <label className="block text-sm font-semibold text-slate-200 mb-2">Password</label>
                         <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <Lock className="h-5 w-5 text-slate-500" />
-                            </div>
+                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
                             <input
                                 type="password"
                                 required
                                 minLength="6"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none text-white placeholder-slate-500"
+                                className="w-full pl-12 pr-4 py-3 bg-slate-800/50 border border-white/10 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none text-white placeholder-slate-500 hover:border-white/20"
                                 placeholder="••••••••"
                             />
                         </div>
                     </div>
 
+                    {/* Sign Up Button */}
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-slate-900 flex justify-center items-center disabled:opacity-70 disabled:cursor-not-allowed mt-4"
+                        className="w-full py-3 px-4 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:shadow-xl hover:shadow-indigo-500/30 text-white font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
                     >
                         {isLoading ? (
-                            <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                         ) : (
-                            'Sign Up'
+                            <>
+                                Sign Up
+                                <ArrowRight className="w-4 h-4" />
+                            </>
                         )}
                     </button>
 
+                    {/* Sign In Link */}
                     <p className="text-center text-sm text-slate-400 mt-6">
                         Already have an account?{' '}
-                        <Link to="/login" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+                        <Link to="/login" className="text-indigo-300 hover:text-indigo-200 font-semibold transition-colors">
                             Sign in
                         </Link>
                     </p>
