@@ -8,13 +8,13 @@ import TruckLoader from '../components/TruckLoader';
 
 const StatusPill = ({ status }) => {
     const colors = {
-        'Available': 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 shadow-lg shadow-emerald-500/10',
-        'On Trip': 'bg-blue-500/20 text-blue-300 border-blue-500/40 shadow-lg shadow-blue-500/10',
-        'In Shop': 'bg-red-500/20 text-red-300 border-red-500/40 shadow-lg shadow-red-500/10',
-        'Retired': 'bg-slate-700/50 text-slate-300 border-slate-700'
+        'Available': 'bg-[var(--accent-green)]/10 text-[var(--accent-green)] shadow-[0_0_10px_rgba(16,185,129,0.2)]',
+        'On Trip': 'bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] shadow-[0_0_10px_rgba(0,241,254,0.2)]',
+        'In Shop': 'bg-[var(--danger)]/10 text-[var(--danger)] shadow-[0_0_10px_rgba(255,113,108,0.2)]',
+        'Retired': 'bg-[var(--bg-hover)] text-[var(--text-muted)]'
     };
     return (
-        <span className={`px-3 py-1.5 text-xs font-semibold rounded-lg border ${colors[status] || colors['Retired']}`}>
+        <span className={`px-3 py-1 text-xs font-mono font-bold tracking-widest uppercase rounded ${colors[status] || colors['Retired']}`}>
             {status}
         </span>
     );
@@ -65,6 +65,9 @@ const Vehicles = () => {
         data.maxCapacity = Number(data.maxCapacity);
         data.odometer = Number(data.odometer);
         data.acquisitionCost = Number(data.acquisitionCost);
+        if (data.licensePlate) {
+            data.licensePlate = data.licensePlate.toUpperCase();
+        }
         addMutation.mutate(data);
     };
 
@@ -72,28 +75,28 @@ const Vehicles = () => {
         <div className="space-y-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Vehicle Registry</h1>
-                    <p className="text-slate-400 mt-2">Manage your fleet inventory and status</p>
+                    <h1 className="text-3xl md:text-4xl font-bold text-[var(--primary)] tracking-tight uppercase" style={{ letterSpacing: '-0.02em' }}>Vehicle Registry</h1>
+                    <p className="text-[var(--text-secondary)] mt-2 font-mono text-sm uppercase">Manage your fleet inventory and status // SYSTEM_READY</p>
                 </div>
                 <button
                     onClick={() => setIsAddOpen(true)}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:shadow-lg hover:shadow-indigo-500/30 text-white rounded-lg transition-all duration-200 font-semibold hover:scale-105 active:scale-95"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[var(--primary)] to-[var(--primary-dark)] text-black rounded-lg transition-all duration-300 font-bold hover:shadow-[0_0_20px_rgba(153,247,255,0.4)] hover:scale-105 active:scale-95 uppercase tracking-wider text-sm"
                 >
                     <Plus className="w-5 h-5" />
                     Add Vehicle
                 </button>
             </div>
 
-            <div className="bg-gradient-to-br from-[var(--bg-panel)] to-[var(--bg-hover)] rounded-2xl border border-white/10 flex flex-col hover:border-white/20 transition-all duration-300">
-                <div className="p-5 border-b border-white/10 flex items-center gap-3">
+            <div className="bg-[var(--bg-panel)] rounded-2xl flex flex-col transition-all duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+                <div className="p-5 flex items-center gap-3 bg-[var(--bg-hover)] rounded-t-2xl">
                     <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--text-muted)]" />
                         <input
                             type="text"
-                            placeholder="Search model or license plate..."
+                            placeholder="SEARCH MODEL OR LICENSE PLATE..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2.5 bg-slate-800/50 border border-white/10 rounded-lg text-sm text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all hover:border-white/20"
+                            className="w-full pl-10 pr-4 py-2.5 bg-[var(--bg-dark)] text-sm text-[var(--text-light)] placeholder-[var(--text-muted)] border-b border-[var(--text-dim)] focus:border-[var(--primary)] outline-none transition-all uppercase font-mono shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]"
                         />
                     </div>
                 </div>
@@ -101,29 +104,29 @@ const Vehicles = () => {
                 {isLoading ? (
                     <TruckLoader message="Loading vehicles..." />
                 ) : (
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left text-sm text-slate-400">
-                            <thead className="text-xs uppercase bg-white/5 text-slate-300 font-semibold">
-                                <tr className="border-b border-white/10">
-                                    <th className="px-6 py-4">Model</th>
+                    <div className="overflow-x-auto p-4">
+                        <table className="w-full text-left text-sm text-[var(--text-secondary)]">
+                            <thead className="text-xs uppercase bg-[var(--bg-hover)] text-[var(--text-muted)] font-mono tracking-widest">
+                                <tr>
+                                    <th className="px-6 py-4 rounded-tl-lg">Model</th>
                                     <th className="px-6 py-4">License Plate</th>
                                     <th className="px-6 py-4">Type</th>
                                     <th className="px-6 py-4">Region</th>
                                     <th className="px-6 py-4">Capacity</th>
                                     <th className="px-6 py-4">Odometer</th>
                                     <th className="px-6 py-4">Status</th>
-                                    <th className="px-6 py-4 text-right">Actions</th>
+                                    <th className="px-6 py-4 text-right rounded-tr-lg">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="space-y-2">
                                 {filteredVehicles.map(v => (
-                                    <tr key={v._id} className="border-b border-white/5 hover:bg-white/5 transition-colors duration-200">
-                                        <td className="px-6 py-4 font-semibold text-white">{v.model}</td>
-                                        <td className="px-6 py-4"><span className="font-mono bg-slate-800/50 px-3 py-1 rounded-lg border border-white/10 text-slate-300">{v.licensePlate}</span></td>
-                                        <td className="px-6 py-4 text-slate-300">{v.type}</td>
-                                        <td className="px-6 py-4 text-slate-300">{v.region}</td>
-                                        <td className="px-6 py-4 text-slate-300">{v.maxCapacity} kg</td>
-                                        <td className="px-6 py-4 text-slate-300">{v.odometer.toLocaleString()} km</td>
+                                    <tr key={v._id} className="bg-[var(--bg-dark)] hover:bg-[var(--bg-hover)] transition-colors duration-300">
+                                        <td className="px-6 py-4 font-bold text-[var(--text-light)]">{v.model}</td>
+                                        <td className="px-6 py-4"><span className="font-mono bg-[var(--bg-panel)] px-3 py-1 rounded border-l-2 border-[var(--primary)] text-[var(--primary-light)]">{v.licensePlate}</span></td>
+                                        <td className="px-6 py-4 text-[var(--text-muted)]">{v.type}</td>
+                                        <td className="px-6 py-4 text-[var(--text-muted)]">{v.region}</td>
+                                        <td className="px-6 py-4 text-[var(--accent-purple)] font-mono">{v.maxCapacity} kg</td>
+                                        <td className="px-6 py-4 text-[var(--accent-orange)] font-mono">{v.odometer.toLocaleString()} km</td>
                                         <td className="px-6 py-4"><StatusPill status={v.status} /></td>
                                         <td className="px-6 py-4 text-right">
                                             <button
@@ -131,7 +134,7 @@ const Vehicles = () => {
                                                     id: v._id,
                                                     status: v.status === 'Available' ? 'Retired' : 'Available'
                                                 })}
-                                                className="px-3 py-1.5 text-xs font-semibold text-indigo-300 hover:text-indigo-100 hover:bg-indigo-500/20 rounded-lg border border-indigo-500/30 transition-all duration-200"
+                                                className="px-4 py-1.5 text-xs font-bold text-[var(--primary)] hover:text-black hover:bg-[var(--primary)] hover:shadow-[0_0_15px_rgba(153,247,255,0.4)] rounded transition-all duration-300 uppercase tracking-widest"
                                             >
                                                 {v.status === 'Available' ? 'Retire' : 'Activate'}
                                             </button>
@@ -139,7 +142,7 @@ const Vehicles = () => {
                                     </tr>
                                 ))}
                                 {filteredVehicles.length === 0 && (
-                                    <tr><td colSpan="8" className="p-12 text-center text-slate-500">No vehicles found.</td></tr>
+                                    <tr><td colSpan="8" className="p-12 text-center text-[var(--text-dim)] font-mono">NO_VEHICLES_FOUND</td></tr>
                                 )}
                             </tbody>
                         </table>
@@ -150,60 +153,62 @@ const Vehicles = () => {
             {/* Add Modal */}
             <AnimatePresence>
                 {isAddOpen && (
-                    <div className="fixed inset-0 bg-black/50 backdrop-blur-md z-50 flex items-center justify-center p-4">
+                    <div className="fixed inset-0 bg-black/60 backdrop-blur-xl z-50 flex items-center justify-center p-4">
                         <motion.div
                             initial={{ opacity: 0, scale: 0.95, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                            className="bg-gradient-to-br from-[var(--bg-panel)] to-[var(--bg-hover)] border border-white/10 rounded-2xl p-8 w-full max-w-2xl shadow-2xl shadow-black/50"
+                            className="bg-[var(--bg-panel)] p-8 w-full max-w-2xl shadow-[0_20px_60px_rgba(0,241,254,0.15)] rounded-2xl relative overflow-hidden"
                         >
-                            <div className="flex justify-between items-center mb-6">
-                                <h2 className="text-2xl font-bold text-white">Add New Vehicle</h2>
-                                <button onClick={() => setIsAddOpen(false)} className="p-2 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-lg transition-colors">
+                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[var(--primary)] to-[var(--accent-purple)]"></div>
+                            
+                            <div className="flex justify-between items-center mb-8">
+                                <h2 className="text-2xl font-bold text-[var(--text-light)] uppercase tracking-wider">Initialize_Vehicle</h2>
+                                <button onClick={() => setIsAddOpen(false)} className="p-2 text-[var(--text-muted)] hover:text-[var(--primary)] hover:bg-[var(--bg-hover)] rounded transition-colors">
                                     <X className="w-5 h-5" />
                                 </button>
                             </div>
 
                             <form onSubmit={handleSubmit} className="space-y-6">
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-sm font-semibold text-slate-200 mb-2">Model Name</label>
-                                        <input required name="model" type="text" className="w-full px-4 py-2.5 bg-slate-800/50 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all hover:border-white/20" placeholder="e.g., Volvo FH16" />
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <div className="space-y-1">
+                                        <label className="block text-xs font-mono text-[var(--text-secondary)] uppercase tracking-wider">Model_Name</label>
+                                        <input required name="model" type="text" className="w-full px-4 py-2 bg-[var(--bg-dark)] border-b border-[var(--text-dim)] text-[var(--text-light)] placeholder-[var(--text-dim)] focus:border-[var(--primary)] outline-none transition-all" placeholder="E.G. VOLVO FH16" />
                                     </div>
-                                    <div>
-                                        <label className="block text-sm font-semibold text-slate-200 mb-2">License Plate</label>
-                                        <input required name="licensePlate" type="text" className="w-full px-4 py-2.5 bg-slate-800/50 border border-white/10 rounded-lg text-white font-mono uppercase tracking-wider placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all hover:border-white/20" placeholder="ABC-1234" />
+                                    <div className="space-y-1">
+                                        <label className="block text-xs font-mono text-[var(--text-secondary)] uppercase tracking-wider">License_Plate</label>
+                                        <input required name="licensePlate" type="text" className="w-full px-4 py-2 bg-[var(--bg-dark)] border-b border-[var(--text-dim)] text-[var(--text-light)] font-mono uppercase tracking-widest placeholder-[var(--text-dim)] focus:border-[var(--primary)] outline-none transition-all" placeholder="ABC-1234" />
                                     </div>
-                                    <div>
-                                        <label className="block text-sm font-semibold text-slate-200 mb-2">Max Capacity (kg)</label>
-                                        <input required name="maxCapacity" type="number" min="0" className="w-full px-4 py-2.5 bg-slate-800/50 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all hover:border-white/20" placeholder="5000" />
+                                    <div className="space-y-1">
+                                        <label className="block text-xs font-mono text-[var(--text-secondary)] uppercase tracking-wider">Max_Capacity_KG</label>
+                                        <input required name="maxCapacity" type="number" min="0" className="w-full px-4 py-2 bg-[var(--bg-dark)] border-b border-[var(--text-dim)] text-[var(--accent-purple)] font-mono placeholder-[var(--text-dim)] focus:border-[var(--primary)] outline-none transition-all" placeholder="5000" />
                                     </div>
-                                    <div>
-                                        <label className="block text-sm font-semibold text-slate-200 mb-2">Vehicle Type</label>
-                                        <select required name="type" className="w-full px-4 py-2.5 bg-slate-800/50 border border-white/10 rounded-lg text-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all hover:border-white/20">
-                                            <option value="">Select type...</option>
-                                            <option value="Van">Van</option>
-                                            <option value="Truck">Truck</option>
-                                            <option value="Car">Car</option>
+                                    <div className="space-y-1">
+                                        <label className="block text-xs font-mono text-[var(--text-secondary)] uppercase tracking-wider">Vehicle_Type</label>
+                                        <select required name="type" className="w-full px-4 py-2 bg-[var(--bg-dark)] border-b border-[var(--text-dim)] text-[var(--text-light)] focus:border-[var(--primary)] outline-none transition-all">
+                                            <option value="">SELECT_TYPE...</option>
+                                            <option value="Van">VAN</option>
+                                            <option value="Truck">TRUCK</option>
+                                            <option value="Car">CAR</option>
                                         </select>
                                     </div>
-                                    <div>
-                                        <label className="block text-sm font-semibold text-slate-200 mb-2">Region</label>
-                                        <input required name="region" type="text" className="w-full px-4 py-2.5 bg-slate-800/50 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all hover:border-white/20" placeholder="e.g., North" />
+                                    <div className="space-y-1">
+                                        <label className="block text-xs font-mono text-[var(--text-secondary)] uppercase tracking-wider">Region</label>
+                                        <input required name="region" type="text" className="w-full px-4 py-2 bg-[var(--bg-dark)] border-b border-[var(--text-dim)] text-[var(--text-light)] placeholder-[var(--text-dim)] focus:border-[var(--primary)] outline-none transition-all uppercase" placeholder="NORTH_SECTOR" />
                                     </div>
-                                    <div>
-                                        <label className="block text-sm font-semibold text-slate-200 mb-2">Acquisition Cost ($)</label>
-                                        <input required name="acquisitionCost" type="number" min="0" className="w-full px-4 py-2.5 bg-slate-800/50 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all hover:border-white/20" placeholder="50000" />
+                                    <div className="space-y-1">
+                                        <label className="block text-xs font-mono text-[var(--text-secondary)] uppercase tracking-wider">Acquisition_Cost_$</label>
+                                        <input required name="acquisitionCost" type="number" min="0" className="w-full px-4 py-2 bg-[var(--bg-dark)] border-b border-[var(--text-dim)] text-[var(--accent-green)] font-mono placeholder-[var(--text-dim)] focus:border-[var(--primary)] outline-none transition-all" placeholder="50000" />
                                     </div>
-                                    <div className="sm:col-span-2">
-                                        <label className="block text-sm font-semibold text-slate-200 mb-2">Initial Odometer (km)</label>
-                                        <input name="odometer" type="number" defaultValue={0} min="0" className="w-full px-4 py-2.5 bg-slate-800/50 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all hover:border-white/20" placeholder="0" />
+                                    <div className="sm:col-span-2 space-y-1">
+                                        <label className="block text-xs font-mono text-[var(--text-secondary)] uppercase tracking-wider">Initial_Odometer_KM</label>
+                                        <input name="odometer" type="number" defaultValue={0} min="0" className="w-full px-4 py-2 bg-[var(--bg-dark)] border-b border-[var(--text-dim)] text-[var(--accent-orange)] font-mono placeholder-[var(--text-dim)] focus:border-[var(--primary)] outline-none transition-all" placeholder="0" />
                                     </div>
                                 </div>
-                                <div className="flex justify-end gap-3 pt-6 border-t border-white/10">
-                                    <button type="button" onClick={() => setIsAddOpen(false)} className="px-5 py-2.5 text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-all font-semibold">Cancel</button>
-                                    <button type="submit" disabled={addMutation.isPending} className="px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-indigo-600 hover:shadow-lg hover:shadow-indigo-500/30 text-white rounded-lg font-semibold transition-all disabled:opacity-50 hover:scale-105 active:scale-95">
-                                        {addMutation.isPending ? 'Saving...' : 'Save Vehicle'}
+                                <div className="flex justify-end gap-4 pt-8 mt-4 bg-[var(--bg-panel)]">
+                                    <button type="button" onClick={() => setIsAddOpen(false)} className="px-6 py-2 text-[var(--text-muted)] hover:text-[var(--text-light)] hover:bg-[var(--bg-hover)] rounded uppercase text-sm font-bold tracking-widest transition-all">Abort</button>
+                                    <button type="submit" disabled={addMutation.isPending} className="px-6 py-2 bg-gradient-to-r from-[var(--primary)] to-[var(--primary-dark)] text-black rounded font-bold tracking-widest uppercase text-sm transition-all disabled:opacity-50 hover:shadow-[0_0_20px_rgba(153,247,255,0.4)]">
+                                        {addMutation.isPending ? 'Processing...' : 'Execute_Save'}
                                     </button>
                                 </div>
                             </form>

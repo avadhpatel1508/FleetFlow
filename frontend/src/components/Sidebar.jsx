@@ -37,20 +37,20 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 />
             )}
 
-            <aside className={`fixed md:sticky top-0 left-0 z-50 w-64 bg-[var(--bg-panel)]/95 glass backdrop-blur-md border-r border-white/10 h-[100dvh] flex flex-col pt-6 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
+            <aside className={`fixed md:sticky top-0 left-0 z-50 w-64 bg-[var(--bg-panel)] shadow-[10px_0_30px_rgba(0,0,0,0.5)] border-r border-[var(--bg-dark)] h-[100dvh] flex flex-col pt-6 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
                 {/* Logo Section */}
                 <div className="px-4 mb-8 flex items-center justify-between gap-2">
                     <div className="flex items-center gap-3 flex-1">
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg">
-                            <span className="font-bold text-white text-sm">FF</span>
+                        <div className="w-10 h-10 rounded bg-[var(--bg-dark)] flex items-center justify-center shadow-[inset_0_0_10px_rgba(0,241,254,0.3)] border border-[var(--primary)]">
+                            <span className="font-bold text-[var(--primary)] text-sm font-mono">FF</span>
                         </div>
                         <div className="flex-1 min-w-0">
-                            <h1 className="text-sm font-bold text-white truncate">FleetFlow</h1>
-                            <p className="text-xs text-slate-500 truncate">{user?.role}</p>
+                            <h1 className="text-sm font-bold tracking-widest text-[var(--text-light)] uppercase font-mono truncate">FleetFlow</h1>
+                            <p className="text-xs text-[var(--text-dim)] font-mono uppercase truncate">{user?.role}</p>
                         </div>
                     </div>
                     <button
-                        className="md:hidden text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800/50 transition-colors"
+                        className="md:hidden text-[var(--text-muted)] hover:text-[var(--primary)] p-1 rounded hover:bg-[var(--bg-hover)] transition-colors"
                         onClick={() => setIsOpen(false)}
                     >
                         <X className="w-5 h-5" />
@@ -59,7 +59,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
                 {/* Navigation */}
                 <nav className="flex-1 px-3 space-y-1 overflow-y-auto scrollbar-hidden">
-                    <p className="text-xs text-slate-600 font-semibold uppercase tracking-wider px-2 mb-3 mt-2">Menu</p>
+                    <p className="text-xs text-[var(--text-dim)] font-mono uppercase tracking-widest px-2 mb-3 mt-2">Sys_Nav</p>
                     {filteredNav.map((item) => {
                         const Icon = item.icon;
                         return (
@@ -69,17 +69,17 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                                 onClick={() => setIsOpen(false)}
                             >
                                 {({ isActive }) => (
-                                    <div className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 group relative ${isActive
-                                        ? 'bg-indigo-500/20 text-indigo-300 font-medium backdrop-blur-sm'
-                                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/5'
+                                    <div className={`flex items-center gap-3 px-3 py-2.5 rounded transition-all duration-300 group relative ${isActive
+                                        ? 'bg-[var(--bg-hover)] text-[var(--primary)] font-bold'
+                                        : 'text-[var(--text-muted)] hover:text-[var(--text-light)] hover:bg-[var(--bg-hover)]'
                                     }`}>
-                                        <Icon className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-105'}`} />
-                                        <span className="flex-1 text-sm">{item.name}</span>
+                                        <Icon className={`w-5 h-5 flex-shrink-0 transition-transform duration-300 ${isActive ? 'scale-110 drop-shadow-[0_0_8px_rgba(153,247,255,0.6)]' : 'group-hover:scale-105'}`} />
+                                        <span className="flex-1 text-sm font-mono uppercase tracking-wider">{item.name}</span>
                                         {item.badge > 0 && (
-                                            <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg">{item.badge}</span>
+                                            <span className="bg-[var(--accent-orange)] text-black text-[10px] font-bold px-2 py-0.5 rounded shadow-[0_0_10px_rgba(245,158,11,0.5)]">{item.badge}</span>
                                         )}
                                         {isActive && (
-                                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-indigo-400 to-purple-400 rounded-r-full" />
+                                            <div className="absolute left-0 top-0 bottom-0 w-1 bg-[var(--primary)] shadow-[0_0_10px_rgba(153,247,255,0.8)]" />
                                         )}
                                     </div>
                                 )}
@@ -89,17 +89,17 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 </nav>
 
                 {/* Footer Section */}
-                <div className="p-3 border-t border-white/10 mt-auto">
+                <div className="p-3 border-t border-[var(--bg-dark)] mt-auto bg-[var(--bg-panel)]">
                     <button
                         onClick={logout}
-                        className="w-full flex items-center gap-3 px-3 py-2.5 text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all duration-200 group text-sm font-medium"
+                        className="w-full flex items-center gap-3 px-3 py-2.5 text-[var(--text-muted)] hover:text-[var(--danger)] hover:bg-[var(--bg-dark)] rounded transition-all duration-300 group text-sm font-mono font-bold uppercase tracking-widest"
                     >
-                        <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                        <span>Sign Out</span>
+                        <LogOut className="w-5 h-5 group-hover:scale-110 transition-transform drop-shadow-[0_0_8px_rgba(255,113,108,0)] group-hover:drop-shadow-[0_0_8px_rgba(255,113,108,0.6)]" />
+                        <span>Sign_Out</span>
                     </button>
-                    <div className="mt-3 p-3 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg border border-blue-500/20 backdrop-blur-sm">
-                        <p className="text-xs text-slate-400">
-                            👋 Welcome back, <span className="font-semibold text-slate-200">{user?.name?.split(' ')[0] || 'User'}</span>
+                    <div className="mt-3 p-3 bg-[var(--bg-dark)] rounded border border-[var(--bg-hover)]">
+                        <p className="text-xs text-[var(--text-secondary)] font-mono uppercase">
+                            USR: <span className="font-bold text-[var(--text-light)]">{user?.name?.split(' ')[0] || 'GUEST'}</span>
                         </p>
                     </div>
                 </div>

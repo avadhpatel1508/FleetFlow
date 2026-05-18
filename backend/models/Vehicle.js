@@ -8,7 +8,8 @@ const vehicleSchema = new mongoose.Schema({
     licensePlate: {
         type: String,
         required: [true, 'Please add a license plate'],
-        unique: true
+        unique: true,
+        uppercase: true
     },
     maxCapacity: {
         type: Number,
