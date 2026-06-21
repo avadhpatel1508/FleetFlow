@@ -46,7 +46,7 @@ export const registerUser = async (req, res) => {
         }
 
         res.status(201).json({
-            message: 'Registration successful!',
+            message: 'Registration successful!',    
             _id: user._id,
             name: user.name,
             email: user.email,
